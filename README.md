@@ -1,5 +1,5 @@
 # yahg
-A pure javascript framework-in-progress to create and manipulate hexagonal grids using [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics) concepts.
+A pure javascript framework-in-progress to create and manipulate hexagonal grids using [graph](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)) concepts.
 
 ## using yahg
 1. add a reference to graphTheory.js in the head.
