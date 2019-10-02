@@ -1,0 +1,53 @@
+@keyframes throb {
+	100% {
+		transform: scale(1.5);
+	}
+}
+body {
+	margin:0;
+}
+
+main {
+	padding-top: 2.5em;
+}
+
+svg .hex, svg .cell {
+	stroke: black;
+	fill: #eee;
+}
+
+svg .redhex {
+	fill: red;
+}
+
+body.wreath {
+	background: url("./img/xv.png");
+}
+
+fieldset {
+	background: white;
+}
+
+header {
+	position: fixed;
+	background: black;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+header a {
+	text-decoration: none;
+	color: white;
+	display: block;
+	float: left;
+	margin: 10px;
+}
+
+/* svg.throb .hex:hover {
+	animation-name: throb;
+	animation-duration: 0.15s;
+	animation-direction: alternate;
+	animation-iteration-count: 4;
+	animation-timing-function: linear;
+} */

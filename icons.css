@@ -1,0 +1,157 @@
+.sun .body {
+  stroke: none;
+  fill: yellow;
+}
+
+.sun .major {
+  stroke: none;
+  fill: orange;
+}
+
+.sun .minor {
+  stroke: red;
+  stroke-width: 0.5;
+}
+
+.sword {
+  stroke: black;
+  stroke-width: 0.25;
+}
+
+.sword .grip {
+  fill: #640;
+}
+
+.sword .fuller, .sword .pommel {
+  fill: #444;
+}
+
+.sword .blade {
+  fill: silver;
+}
+
+.sword .guard {
+  fill: gold;
+}
+
+.drop {
+  fill: #369;
+}
+
+.flame {
+  fill: #c30;
+}
+
+.candle .shaft, .candle .melt {
+  fill: #ffb;
+  stroke: #bb8;
+}
+
+.coinface {
+  fill: gold;
+  stroke-width: 0.25;
+  stroke: silver;
+}
+
+.coinedge {
+  fill: darkgrey;
+}
+
+.stopper path {
+  fill: tan;
+}
+
+.stopper circle {
+  fill: black;
+}
+
+.compass {
+  stroke-width: 0.25;
+  stroke: black;
+}
+
+.key {
+  fill: #ccc;
+  stroke: #999;
+}
+
+.feather {
+  fill: #def;
+  stroke: #bdf;
+  stroke-width: 0.5;
+}
+
+.moon {
+  fill: #fea;
+  stroke: #def;
+}
+
+.shield {
+  fill: #273;
+  stroke: #050;
+}
+
+.stars {
+  stroke: #f90;
+  fill: #ff0;
+  stroke-width: 0.5;
+}
+
+.tornado {
+  fill: rgba(80,80,80,0.7);
+  stroke: #444;
+}
+
+.chest {
+  fill: #852;
+  stroke: #a80;
+  stroke-width: 2;
+}
+
+.crown {
+  fill: gold;
+  stroke: #ca0;
+  stroke-width: 0.5;
+}
+
+.cube, .crystal, .gem, .roundbot, .tribot, .rectbot {
+  fill: rgba(90,90,90,0.5);
+  stroke: #888;
+  stroke-width: 0.5;
+  stroke-linejoin: miter;
+}
+
+.staff {
+  stroke: #852;
+  fill: #741;
+}
+
+.waves {
+  fill: none;
+  stroke: #369;
+  stroke-width: 0.5;
+}
+
+.dagger {
+  fill: silver;
+  stroke: black;
+  stroke-width: 0.5;
+}
+
+.wand {
+  fill: #840;
+  stroke: #a60;
+  stroke-width: 0.5;
+}
+
+.heart {
+  fill: red;
+}
+
+.tree .canopy {
+  fill: green;
+}
+
+.tree .trunk {
+  fill: #520;
+}
