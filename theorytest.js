@@ -1,5 +1,5 @@
 const
-  // shape -- not working yet
+  // shape -- one of [ "hex", "tri", "para", "star", "empty" ]
   // size -- size of grid
   // order -- insertion order of hex coordinates
   gridParams = {
