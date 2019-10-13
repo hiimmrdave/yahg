@@ -10,6 +10,14 @@ const
     { q: -1, r: 1, s: 0 },
     { q: 0, r: 1, s: -1 }
   ],
+  HALF_DIRECTIONS = [
+    { q: 0.5, r: 0, s: -0.5 },
+    { q: 0.5, r: -0.5, s: 0 },
+    { q: 0, r: -0.5, s: 0.5 },
+    { q: -0.5, r: 0, s: 0.5 },
+    { q: -0.5, r: 0.5, s: 0 },
+    { q: 0, r: 0.5, s: -0.5 }
+  ],
   DIAGONALS =[
     { q: 2, r: -1, s: -1 },
     { q: 1, r: -2, s: 1 },
@@ -64,7 +72,7 @@ class Cell extends HexNode {
     this.q = q + 0;
     this.r = r + 0;
     this.s = s + 0;
-    this.id = `${q}.${r}.${s}`;
+    this.id = `${q},${r},${s}`;
     if ( this.q + this.r + this.s != 0 ) {
       console.log("invalid coordinates");
     }
@@ -152,14 +160,12 @@ class Cell extends HexNode {
 
   get edges () {
     // six edges of this cell
-    return [
-      ,
-      ,
-      ,
-      ,
-      ,
-
-    ];
+    return HALF_DIRECTIONS.map( ({ q, r, s }) => {
+      q += this.q;
+      r += this.r;
+      s += this.s;
+      return new Edge( {q, r, s} );
+    });
   }
 
   distance ( cell ) {
@@ -186,7 +192,7 @@ class Vert extends HexNode {
     this.r = r + 0;
     this.s = s + 0;
     this.v = v;
-    this.id = `${q}.${r}.${s}.${v}`;
+    this.id = `${q},${r},${s},${v}`;
     if ( this.q + this.r + this.s != 0 || ![-1,1].includes(this.v)){
       console.log("invalid Vert");
     }
@@ -230,40 +236,27 @@ class Vert extends HexNode {
 }
 
 class Edge extends HexNode {
-  constructor ( cellA, cellB ) {
+  constructor ( {q,r,s} ) {
 		super();
-    const { q: qA, r: rA } = cellA,
-      { q: qB, r: rB } = cellB;
-    // Edges only exist between adjacent cells
-    if ( Cell.equals(cellA, cellB) ) {
-      console.log("there is no edge between a cell and itself");
-    }
-    if ( cellA.neighbors.includes(cellB.id) ) {
-      console.log(`${cellB.id} is not a neighbor of ${cellA.id}`);
-    }
-    if ( qA < qB && rA < rB  ) {
-      this.a = new Cell( cellB );
-      this.b = new Cell( cellA );
-    } else {
-      this.a = new Cell( cellA );
-      this.b = new Cell( cellB );
-    }
-    this.id = this.a.id + '*' + this.b.id;
+    this.q = q;
+    this.r = r;
+    this.s = s;
+    this.id = `${q},${r},${s}`;
   }
 
   get cells () {
     // two cells which share an edge
     return [
-      new Cell(this.a),
-      new Cell(this.b)
-    ]
+      new Cell(),
+      new Cell()
+    ];
   }
 
   get vertices () {
     // two vertices at endpoints of an edge
     return [
-      ,
-
+      new Vert(),
+      new Vert()
     ];
   }
 
