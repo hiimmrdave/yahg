@@ -181,7 +181,8 @@ class Cell extends HexNode {
   }
 
   static line ( a, b ) {
-    return [];
+    let cells = [];
+    return cells;
   }
 }
 
@@ -206,8 +207,8 @@ class Vert extends HexNode {
     // three cells which share this vertex
     return [
       this.cell,
-      ,
-
+      new Cell(),
+      new Cell()
     ];
   }
 
@@ -228,9 +229,9 @@ class Vert extends HexNode {
   get edges () {
     // three edges which have this vertex as an endpoint
     return [
-      ,
-      ,
-
+      new Edge(),
+      new Edge(),
+      new Edge()
     ];
   }
 }
@@ -263,10 +264,10 @@ class Edge extends HexNode {
   get edges () {
     // four edges which share an endpoint with this edge
     return [
-      ,
-      ,
-      ,
-
+      new Edge(),
+      new Edge(),
+      new Edge(),
+      new Edge()
     ];
   }
 }
@@ -285,6 +286,7 @@ class Graph {
   addNode ( node ) {
     if ( this.hasNode(node) ) {
       console.log("node already exists in this map");
+      return false;
     }
     this[node.id] = node;
     this.nodes.add( node.id );
@@ -416,14 +418,14 @@ class Orientation {
         y: thousandthRound( Math.cos( theta ) * SQRT_THREE )
       }
     };
-    this.b = {
-      q: {
-        x: thousandthRound( Math.cos( theta - 3 ) * -2/3 ),
-        y: thousandthRound( Math.sin( theta - 3 ) * -2/3 )
+	  this.b = {
+      x: {
+        q: thousandthRound( Math.cos( theta - 3 ) * -2/3 ),
+        r: thousandthRound( Math.sin( theta - 1 ) * 2/3 )
       },
-      r: {
-        x: thousandthRound( Math.sin( theta - 1 ) * 2/3 ),
-        y: thousandthRound( Math.cos( theta - 1 ) * 2/3 )
+      y: {
+        q: thousandthRound( Math.sin( theta - 3 ) * -2/3 ),
+        r: thousandthRound( Math.cos( theta - 1 ) * 2/3 )
       }
     };
     this.v = {
