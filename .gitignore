@@ -1,5 +1,5 @@
 .eslint*
-package.json
+package*.json
 node_modules
 favicon.ico
 img/*.png
