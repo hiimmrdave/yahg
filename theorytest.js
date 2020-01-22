@@ -1,66 +1,67 @@
-const
-  inputs = document.querySelector("form[id=\"params\"]"),
+const inputs = document.querySelector('form[id="params"]'),
   renderContext = document.querySelector("#hg");
-
 
 inputs.onchange = rend;
 
-function getIntValue(elementId){
-  return parseInt(document.getElementById(elementId).value,10);
+function getIntValue(elementId) {
+  return parseInt(document.getElementById(elementId).value, 10);
 }
 
-function getRadioValue(elementName){
-  return document.querySelector(`input[name="`+elementName+`"]:checked`).value;
+function getRadioValue(elementName) {
+  return document.querySelector(`input[name="` + elementName + `"]:checked`)
+    .value;
 }
 
-function getFloat(elementId){
-  return parseFloat(document.querySelector("#"+elementId).value,10);
+function getFloat(elementId) {
+  return parseFloat(document.querySelector("#" + elementId).value, 10);
 }
 
-function getForm(){
-  const
-    gridParams = {
+function getForm() {
+  const gridParams = {
       size: getIntValue("gs1"),
       shape: getRadioValue("shape"),
-      order: getIntValue("order"),
+      order: getIntValue("order")
     },
     layoutParams = {
       origin: { x: getIntValue("orx"), y: getIntValue("ory") },
-      theta: getFloat("orientation") * Math.PI / 12,
+      theta: (getFloat("orientation") * Math.PI) / 12,
       cellSize: { x: getIntValue("hsx"), y: getIntValue("hsy") }
     },
     rendParams = {
       id: "hg",
-      size: { x: getIntValue("csx"), y: getIntValue("csy") },
+      size: { x: getIntValue("csx"), y: getIntValue("csy") }
     };
-  return {gridParams, layoutParams, rendParams};
+  return { gridParams, layoutParams, rendParams };
 }
 
-let grid,renderer;
-function makeGraph(){
+let grid, renderer;
+function makeGraph() {
   const params = getForm();
   const layout = new Layout(params.layoutParams);
   grid = new Grid(params.gridParams);
   renderer = new SVGRenderer(params.rendParams);
-  return {layout,grid,renderer}
+  return { layout, grid, renderer };
 }
 
-function rend () {
+function rend() {
   let lastChild;
   while ((lastChild = renderContext.lastChild)) {
-    renderContext.removeChild(lastChild)
+    renderContext.removeChild(lastChild);
   }
   const { layout, grid, renderer } = makeGraph();
   grid.populate();
-  renderer.render( grid, layout );
+  renderer.render(grid, layout);
 }
 rend();
-
 
 const sub = document.querySelector("#submain");
 //const fback = document.querySelector("#st");
 
-fetch('./img/icons.svg')
-  .then( res => res.text() )
-  .then( text => new DOMParser().parseFromString(text,"image/svg+xml").firstChild )
-  .then( doc => { sub.appendChild(doc) })
+fetch("./img/icons.svg")
+  .then(res => res.text())
+  .then(
+    text => new DOMParser().parseFromString(text, "image/svg+xml").firstChild
+  )
+  .then(doc => {
+    sub.appendChild(doc);
+  });
