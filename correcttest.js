@@ -1,6 +1,5 @@
 const inputs = document.querySelector("form[id=\"params\"]"),
   iconSelect = document.querySelector("select[name=\"icon\"]"),
-  debug = document.querySelector("#debug"),
   field = document.querySelector("#stest"),
   resetG = document.querySelector("#resetgraph"),
   showC = document.querySelector("#showcoords")
@@ -67,11 +66,11 @@ function addIcon (ic,sv,src,h) {
   myShape.setAttribute("transform",
     `translate(${xOff} ${yOff}) scale(${xSca},${ySca})`);
   myShape.setAttribute("data-loc",loc)
-  for (myNode of shape.childNodes) {
+  for (const myNode of shape.childNodes) {
     if (myNode.nodeType == 1) {
       myShape.appendChild(myNode);
     }
-  };
+  }
   myShape.setAttribute("class",ic);
   sv.appendChild(myShape);
 }
@@ -106,11 +105,11 @@ function drawLine(a,b) {
     );
     thisHex.classList.add('redhex')
   }
-};
+}
 
 function showCoords() {
-  cells = stest.querySelectorAll('.hex');
-  for (cell of cells){
+  cells = field.querySelectorAll('.hex');
+  for (const cell of cells){
     const text = document.createElementNS("http://www.w3.org/2000/svg","text")
     const myCell = {
       q: cell.getAttribute('data-q'),
@@ -122,7 +121,7 @@ function showCoords() {
     text.setAttribute('x',layout.hexToPix(myCell).x);
     text.setAttribute('y',layout.hexToPix(myCell).y);
     text.textContent = `${myCell.q}, ${myCell.r}, ${myCell.s}`
-    stest.appendChild(text);
+    field.appendChild(text);
   }
 }
 
@@ -131,9 +130,9 @@ function rend(){
   graph = new Graph(val);
   layout = new Layout(val);
   const rsvgobj = {id:"stest",size:val.renderSize,graph:graph,layout:layout};
-  render = new RenderSVG(rsvgobj);
+  let render = new RenderSVG(rsvgobj);
   let lastChild;
-  while (lastChild = field.lastChild) field.removeChild(lastChild);
+  while ((lastChild = field.lastChild)) field.removeChild(lastChild);
   render.render();
   return;
 }
