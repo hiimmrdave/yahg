@@ -12,8 +12,7 @@ for now, refer to theorytest.js and graphTheory.html for examples
 ## status
 * graphTheory.js is the current working code.
   * graphTheory.html and theorytest.js provide a demo
-* ajaxsheet.js and ajaxtest.html are learning how to include SVG icons
-  * icons.css styles the SVG icons
 * hexgraph.js is an earlier attempt which still contains useful concepts not yet implemented in newer version
   * correcttest.js, and index.html are the demo for hexgraph.js
+  * icons.css styles the SVG icons
 * this.css styles the html demos
