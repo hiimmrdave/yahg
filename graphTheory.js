@@ -10,14 +10,6 @@ const
     { q: -1, r: 1, s: 0 },
     { q: 0, r: 1, s: -1 }
   ],
-  HALF_DIRECTIONS = [
-    { q: 0.5, r: 0, s: -0.5 },
-    { q: 0.5, r: -0.5, s: 0 },
-    { q: 0, r: -0.5, s: 0.5 },
-    { q: -0.5, r: 0, s: 0.5 },
-    { q: -0.5, r: 0.5, s: 0 },
-    { q: 0, r: 0.5, s: -0.5 }
-  ],
   DIAGONALS =[
     { q: 2, r: -1, s: -1 },
     { q: 1, r: -2, s: 1 },
@@ -26,39 +18,26 @@ const
     { q: -1, r: 2, s: -1 },
     { q: 1, r: 1, s: -2 }
   ],
-  HALF_PI = Math.PI / 2,
+//  HALF_PI = Math.PI / 2,
   PI_OVER_THREE = Math.PI / 3,
-  PI_OVER_SIX = Math.PI / 6,
+//  PI_OVER_SIX = Math.PI / 6,
   SQRT_THREE = Math.sqrt(3);
 
 function thousandthRound ( n ) {
   return Math.round( n * 1000 ) / 1000 + 0;
 }
 
+function lerp ( m, n, t ) {
+  return m.q * (1-t) + n.q * t;
+}
+
 class HexNode {
-  constructor () {
-    this.id;
-    this.links = new Set();
-  }
-
-  hasLink ( {id} ) {
-    return this.links.has( id );
-  }
-
-  unlink ( {id} ) {
-    if ( this.hasLink( {id} ) ){
-      return false;
-    }
-    this.links.delete( id );
-    return true;
-  }
-
-  link ( {id} ) {
-    if ( this.hasLink( {id} ) ){
-      return false;
-    }
-    this.links.add( id );
-    return this.links;
+  constructor ({ q, r, s = -q-r }) {
+    this.q = q;
+    this.r = r;
+    this.s = s;
+    this.id = `${q},${r},${s}`;
+    this.links = new WeakMap();
   }
 
   equals ( {id} ) {
@@ -68,38 +47,38 @@ class HexNode {
 
 class Cell extends HexNode {
   constructor ( { q, r, s = -q-r } ) {
-    super();
+    super({ q, r, s });
     this.q = q + 0;
     this.r = r + 0;
     this.s = s + 0;
     this.id = `${q},${r},${s}`;
+    this.type = "Cell";
     if ( this.q + this.r + this.s != 0 ) {
       console.log("invalid coordinates");
     }
-    this.links = new Set();
   }
 
-  plus ( {q,r,s} ) {
+  static plus ( a,b ) {
     return new Cell( {
-      q: this.q + q,
-      r: this.r + r,
-      s: this.s + s
+      q: a.q + b.q,
+      r: a.r + b.r,
+      s: a.s + b.s
     } );
   }
 
-  minus ( {q,r,s} ) {
+  static minus ( a,b ) {
     return new Cell( {
-      q: this.q - q,
-      r: this.r - r,
-      s: this.s - s
+      q: a.q - b.q,
+      r: a.r - b.r,
+      s: a.s - b.s
     } );
   }
 
-  times ( factor ) {
+  static times ( cell, factor ) {
     return new Cell( {
-      q: this.q * factor,
-      r: this.r * factor,
-      s: this.s * factor
+      q: cell.q * factor,
+      r: cell.r * factor,
+      s: cell.s * factor
     } );
   }
 
@@ -129,14 +108,14 @@ class Cell extends HexNode {
     // six cells neighboring this cell
     return DIRECTIONS.map(
       function (vector) {
-        return new Cell( this.plus(vector) );
+        return new Cell( Cell.plus(this, vector) );
       }, this );
   }
 
   get diagonals () {
     return DIAGONALS.map(
       function (vector) {
-        return new Cell( this.plus(vector) );
+        return new Cell( Cell.plus(this, vector) );
       }, this );
   }
 
@@ -160,58 +139,65 @@ class Cell extends HexNode {
 
   get edges () {
     // six edges of this cell
-    return HALF_DIRECTIONS.map( ({ q, r, s }) => {
-      q += this.q;
-      r += this.r;
-      s += this.s;
-      return new Edge( {q, r, s} );
-    });
+    return DIRECTIONS.map(dir => new Edge(Cell.plus(this,Cell.times(dir,0.5))));
   }
 
-  distance ( cell ) {
-    return 0;
+  static distance ( a, b ) {
+    return Cell.length( Cell.minus( a, b ) );
   }
 
-  length ( cell ) {
-    return 0;
+  static length ( cell ) {
+    return Math.max( Math.abs(cell.q), Math.abs(cell.r), Math.abs(cell.s) );
   }
 
+// TODO fix this, don't be lazy
   static lerp ( a, b, t ) {
-    return new Cell( { q: 0, r: 0, s: 0 } );
+    return new Cell({
+      q: lerp( a.q, b.q, t ),
+      r: lerp( a.r, b.r, t ),
+      s: lerp( a.s, b.s, t )
+    }).round;
   }
 
+// TODO can this be written more functionally?
   static line ( a, b ) {
+    const d = Cell.distance(a,b);
+    const step = 1 / Math.max(d,1);
     let cells = [];
+    for (let i = 0; i<=step; i++){
+      cells.push(Cell.lerp(a,b, step*i));
+    }
     return cells;
   }
 }
 
 class Vert extends HexNode {
   constructor ({q,r,s},v) {
-    super();
-    this.q = q + 0;
-    this.r = r + 0;
-    this.s = s + 0;
+    super({q,r,s});
     this.v = v;
     this.id = `${q},${r},${s},${v}`;
+    this.type = "Vert";
     if ( this.q + this.r + this.s != 0 || ![-1,1].includes(this.v)){
       console.log("invalid Vert");
     }
   }
 
+// returns the Cell that this Vert "belongs" to
   get cell () {
     return new Cell({ q: this.q, r: this.r, s: this.s });
   }
 
+/* returns three Cells which share this Vert
   get cells () {
-    // three cells which share this vertex
     return [
       this.cell,
       new Cell(),
       new Cell()
     ];
   }
+  ...somehow */
 
+// returns three Verts that share edges with this Vert
   get vertices () {
     const { q, r, s, v } = this,
       negV = -1 * v,
@@ -226,43 +212,43 @@ class Vert extends HexNode {
     ];
   }
 
+/* returns three Edges which have this Vert as an endpoint
   get edges () {
-    // three edges which have this vertex as an endpoint
     return [
       new Edge(),
       new Edge(),
       new Edge()
     ];
   }
+  ...somehow */
 }
 
 class Edge extends HexNode {
   constructor ( {q,r,s} ) {
-    super();
-    this.q = q;
-    this.r = r;
-    this.s = s;
-    this.id = `${q},${r},${s}`;
+    super({q,r,s});
+    this.type = "Edge";
   }
 
+/* returns two cells which share this edge
   get cells () {
-    // two cells which share an edge
     return [
       new Cell(),
       new Cell()
     ];
   }
+  ...somehow */
 
+/* returns two vertices at endpoints of this edge
   get vertices () {
-    // two vertices at endpoints of an edge
     return [
       new Vert(),
       new Vert()
     ];
   }
+  ...somehow */
 
+/*  returns four edges which share an endpoint with this edge
   get edges () {
-    // four edges which share an endpoint with this edge
     return [
       new Edge(),
       new Edge(),
@@ -270,54 +256,12 @@ class Edge extends HexNode {
       new Edge()
     ];
   }
+  ...somehow */
 }
 
-class Graph {
-  constructor () {
-    this.nodes = new Set();
-  }
-
-  hasNode ( {id} ) {
-    const hOP = this.hasOwnProperty( id ),
-      sHV = this.nodes.has( id );
-    return hOP && sHV;
-  }
-
-  addNode ( node ) {
-    if ( this.hasNode(node) ) {
-      console.log("node already exists in this map");
-      return false;
-    }
-    this[node.id] = node;
-    this.nodes.add( node.id );
-    return this[node.id];
-  }
-
-  removeNode ( {id} ) {
-    if ( !this.hasNode( {id} ) ) {
-      console.log("no such node");
-      return false;
-    }
-    //remove links to node
-    for ( const node of this.nodes ) {
-      this[node].unlink( {id} );
-      if ( this[id].links.size === 0 ) {
-        if (this[node].id === id) {
-          continue;
-        }
-        this.removeNode( this[node] );
-      }
-    }
-    //remove node
-    delete this[id];
-    this.nodes.delete( id );
-    return true;
-  }
-}
-
-class Grid extends Graph {
+class Grid {
   constructor ({ shape = "hex", size = 2, order = 0 } = {}) {
-    super();
+    this.nodes = new Set();
     this.size = size;
     const VALID_SHAPES = [ "hex", "tri", "para", "star", "empty" ];
     if ( VALID_SHAPES.includes( shape ) ) {
@@ -329,17 +273,19 @@ class Grid extends Graph {
     this.order = ["qrs","qsr","rqs","rsq","sqr","srq"][order];
   }
 
+// this is side-effecty and state-dependent
   populate () {
-    const gridFunc = this.shape + "Grid";
-    this[gridFunc]();
+    this[this.shape + "Grid"]();
+    return this.nodes;
   }
 
+// this is side-effecty
   depopulate () {
-    for ( const node of this.nodes ) {
-      this.removeNode( this[node] );
-    }
+    this.nodes.clear();
+    return this.nodes;
   }
 
+// this is side-effecty and state-dependent
   addCell ( a, b ) {
     const ab = [a, b, -1 * a - b],
       ins = {
@@ -348,15 +294,11 @@ class Grid extends Graph {
         s: ab[this.order.indexOf("s")]
       },
       cell = new Cell( { q: ins.q, r: ins.r, s: ins.s } );
-    if ( !this.hasNode( cell ) ) {
-      this.addNode( cell );
-    }
+    this.nodes.add( cell );
     for ( const vert of cell.vertices ){
-      if ( !this.hasNode( vert ) ){
-        this.addNode( vert );
-      }
-      cell.link( vert );
-      vert.link( cell );
+      this.nodes.add( vert );
+      cell.links.set( vert,{type:"hasCell"} );
+      vert.links.set( cell,{type:"hasVert"} );
     }
   }
 
@@ -418,7 +360,7 @@ class Orientation {
         y: thousandthRound( Math.cos( theta ) * SQRT_THREE )
       }
     };
-	  this.b = {
+    this.b = {
       x: {
         q: thousandthRound( Math.cos( theta - 3 ) * -2/3 ),
         r: thousandthRound( Math.sin( theta - 1 ) * 2/3 )
@@ -461,9 +403,11 @@ class Layout {
     return new Point( { x, y })
   }
 
+/* return the point at the midpoint of an Edge
   edgeToPoint ( e ) {
     return;
   }
+  ...somehow */
 
   pointToCell ( p ) {
     const o = this.orientation,
@@ -476,13 +420,17 @@ class Layout {
     return new Cell( { q, r, s: -q-r } );
   }
 
+/* return the Vert nearest a given Point
   pointToVert ( p ) {
     return;
   }
+  ...somehow */
 
+/* return the edge nearest a given Point
   pointToEdge ( e ) {
     return;
   }
+  ...somehow */
 
   vertsToPoints ( cell ) {
     return cell.vertices.map(vert => this.vertToPoint(vert));
@@ -493,17 +441,13 @@ class Renderer {
   constructor ( {
   id = "hg",
   size = new Point({ x: 500, y: 500 }),
-  layout = new Layout(),
-  grid = new Grid(),
   } = {} ) {
   this.size = size;
-  this.grid = grid;
-  this.layout = layout;
   this.context = document.getElementById( id );
   }
 
-  cellPath ( cell ) {
-    const verts = this.layout.vertsToPoints( cell )
+  cellPath ( cell, layout ) {
+    const verts = layout.vertsToPoints( cell )
     let ret = verts.map( v => `L ${v.x},${v.y}` );
     ret.unshift( `M ${verts[5].x},${verts[5].y}` )
     return ret.join( " " ) + " z";
@@ -511,8 +455,8 @@ class Renderer {
 }
 
 class SVGRenderer extends Renderer {
-  constructor ( { id, size, grid, layout } = {} ) {
-    super( { id, size, grid, layout })
+  constructor ( { id, size } = {} ) {
+    super( { id, size })
     this.context.style.width = this.size.x;
     this.context.style.height = this.size.y;
   }
@@ -525,15 +469,15 @@ class SVGRenderer extends Renderer {
     return document.createElementNS(SVGRenderer.svgns,element);
   }
 
-  buildCell ( cell ) {
+  buildCell ( cell, layout ) {
     let path = this.svgElement( "path" );
     const
-      center = this.layout.cellToPoint( cell ),
+      center = layout.cellToPoint( cell ),
       attribs = [
         [ "data-q", cell.q ],
         [ "data-r", cell.r ],
         [ "data-s", cell.s ],
-        [ "d", this.cellPath( cell ) ]
+        [ "d", this.cellPath( cell, layout ) ]
       ],
       styles = {
         transformOrigin: `${center.x}px ${center.y}px`
@@ -546,11 +490,12 @@ class SVGRenderer extends Renderer {
     return path;
   }
 
-  render () {
-    for ( const node of this.grid.nodes ) {
-      if ( this.grid[node].constructor.name == "Cell" ){
-        this.context.appendChild( this.buildCell( this.grid[node] ) );
+// TODO refactor to more functional style?
+  render ( grid, layout ) {
+    grid.nodes.forEach(node => {
+      if (node.type == "Cell"){
+        this.context.appendChild( this.buildCell( node, layout ) );
       }
-    }
+    });
   }
 }
