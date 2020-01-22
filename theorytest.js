@@ -1,36 +1,66 @@
 const
-  // shape -- one of [ "hex", "tri", "para", "star", "empty" ]
-  // size -- size of grid
-  // order -- insertion order of hex coordinates
-  gridParams = {
-    size: 3,
-    shape: "star"
-  },
-  grid = new Grid( gridParams ),
+  inputs = document.querySelector("form[id=\"params\"]"),
+  renderContext = document.querySelector("#hg");
 
-  // origin -- the x,y of the center of cell 0,0,0
-  // theta -- the angle of rotation of the grid and cells
-  // cellSize -- the x,y size of the cells
-  layoutParams = {
-    origin: new Point({ x: 250, y: 250 }),
-    theta: 0,
-    cellSize: new Point({ x:20, y: 20 })
-  },
-  layout = new Layout( layoutParams ),
 
-  // id -- the html id of the rendering context (SVG only right now)
-  // size -- the x,y size of the rendering element
-  // layout -- the layout object to use for rendering
-  // grid -- the grid to render
-  rendParams = { layout, grid },
-  renderer = new SVGRenderer( rendParams );
+inputs.onchange = rend;
+
+function getIntValue(elementId){
+  return parseInt(document.getElementById(elementId).value,10);
+}
+
+function getRadioValue(elementName){
+  return document.querySelector(`input[name="`+elementName+`"]:checked`).value;
+}
+
+function getFloat(elementId){
+  return parseFloat(document.querySelector("#"+elementId).value,10);
+}
+
+function getForm(){
+  const
+    gridParams = {
+      size: getIntValue("gs1"),
+      shape: getRadioValue("shape"),
+      order: getIntValue("order"),
+    },
+    layoutParams = {
+      origin: { x: getIntValue("orx"), y: getIntValue("ory") },
+      theta: getFloat("orientation") * Math.PI / 12,
+      cellSize: { x: getIntValue("hsx"), y: getIntValue("hsy") }
+    },
+    rendParams = {
+      id: "hg",
+      size: { x: getIntValue("csx"), y: getIntValue("csy") },
+    };
+  return {gridParams, layoutParams, rendParams};
+}
+
+let grid,renderer;
+function makeGraph(){
+  const params = getForm();
+  const layout = new Layout(params.layoutParams);
+  grid = new Grid(params.gridParams);
+  renderer = new SVGRenderer(params.rendParams);
+  return {layout,grid,renderer}
+}
 
 function rend () {
   let lastChild;
-  while (lastChild = renderer.context.lastChild) {
-    renderer.context.removeChild(lastChild)
+  while ((lastChild = renderContext.lastChild)) {
+    renderContext.removeChild(lastChild)
   }
-  renderer.render();
+  const { layout, grid, renderer } = makeGraph();
+  grid.populate();
+  renderer.render( grid, layout );
 }
-grid.populate();
-renderer.render();
+rend();
+
+
+const sub = document.querySelector("#submain");
+//const fback = document.querySelector("#st");
+
+fetch('./img/icons.svg')
+  .then( res => res.text() )
+  .then( text => new DOMParser().parseFromString(text,"image/svg+xml").firstChild )
+  .then( doc => { sub.appendChild(doc) })
