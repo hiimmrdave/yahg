@@ -294,8 +294,13 @@ class Grid {
     this.nodes.add(cell);
     for (const vert of cell.vertices) {
       this.nodes.add(vert);
-      cell.links.set(vert, { type: "hasCell" });
-      vert.links.set(cell, { type: "hasVert" });
+      cell.links.set(vert, { type: "hasVert" });
+      vert.links.set(cell, { type: "hasCell" });
+    }
+    for (const edge of cell.edges) {
+      this.nodes.add(edge);
+      cell.links.set(edge, { type: "hasEdge" });
+      edge.links.set(cell, { type: "hasCell" });
     }
   }
 
@@ -439,7 +444,7 @@ class Renderer {
     this.context = document.getElementById(id);
   }
 
-  cellPath(cell, layout) {
+  static cellPath(cell, layout) {
     const verts = layout.vertsToPoints(cell);
     let ret = verts.map(v => `L ${v.x},${v.y}`);
     ret.unshift(`M ${verts[5].x},${verts[5].y}`);
@@ -458,18 +463,18 @@ class SVGRenderer extends Renderer {
     return "http://www.w3.org/2000/svg";
   }
 
-  svgElement(element) {
+  static svgElement(element) {
     return document.createElementNS(SVGRenderer.svgns, element);
   }
 
-  buildCell(cell, layout) {
-    let path = this.svgElement("path");
+  static buildCell(cell, layout) {
+    let path = SVGRenderer.svgElement("path");
     const center = layout.cellToPoint(cell),
       attribs = [
         ["data-q", cell.q],
         ["data-r", cell.r],
         ["data-s", cell.s],
-        ["d", this.cellPath(cell, layout)]
+        ["d", Renderer.cellPath(cell, layout)]
       ],
       styles = {
         transformOrigin: `${center.x}px ${center.y}px`
@@ -482,11 +487,31 @@ class SVGRenderer extends Renderer {
     return path;
   }
 
+  static markPoint(node, layout) {
+    let path = SVGRenderer.svgElement("circle");
+    const center = layout.cellToPoint(node),
+      attribs = [
+        ["data-q", node.q],
+        ["data-r", node.r],
+        ["data-s", node.s],
+        ["r", "2"],
+        ["cx", center.x],
+        ["cy", center.y]
+      ];
+    for (const attrib of attribs) {
+      path.setAttribute(attrib[0], attrib[1]);
+    }
+    return path;
+  }
+
   // TODO refactor to more functional style?
   render(grid, layout) {
     grid.nodes.forEach(node => {
       if (node.type == "Cell") {
-        this.context.appendChild(this.buildCell(node, layout));
+        this.context.appendChild(SVGRenderer.buildCell(node, layout));
+      }
+      if (node.type == "Edge" || node.type == "Cell") {
+        this.context.appendChild(SVGRenderer.markPoint(node, layout));
       }
     });
   }

@@ -34,10 +34,10 @@ function getForm() {
   return { gridParams, layoutParams, rendParams };
 }
 
-let grid, renderer;
+let grid, renderer, layout;
 function makeGraph() {
   const params = getForm();
-  const layout = new Layout(params.layoutParams);
+  layout = new Layout(params.layoutParams);
   grid = new Grid(params.gridParams);
   renderer = new SVGRenderer(params.rendParams);
   return { layout, grid, renderer };
