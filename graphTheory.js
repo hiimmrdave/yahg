@@ -390,7 +390,7 @@ class Layout {
     this.origin = origin;
   }
 
-  cellToPoint(c) {
+  nodeToPoint(c) {
     const o = this.orientation,
       x = (o.f.q.x * c.q + o.f.r.x * c.r) * this.size.x + this.origin.x,
       y = (o.f.q.y * c.q + o.f.r.y * c.r) * this.size.y + this.origin.y;
@@ -399,8 +399,8 @@ class Layout {
 
   vertToPoint(v) {
     const o = this.orientation,
-      x = o.v.x * this.size.x * v.v + this.cellToPoint(v.cell).x,
-      y = o.v.y * this.size.y * v.v + this.cellToPoint(v.cell).y;
+      x = o.v.x * this.size.x * v.v + this.nodeToPoint(v.cell).x,
+      y = o.v.y * this.size.y * v.v + this.nodeToPoint(v.cell).y;
     return new Point({ x, y });
   }
 
@@ -469,7 +469,7 @@ class SVGRenderer extends Renderer {
 
   static buildCell(cell, layout) {
     let path = SVGRenderer.svgElement("path");
-    const center = layout.cellToPoint(cell),
+    const center = layout.nodeToPoint(cell),
       attribs = [
         ["data-q", cell.q],
         ["data-r", cell.r],
@@ -487,31 +487,46 @@ class SVGRenderer extends Renderer {
     return path;
   }
 
-  static markPoint(node, layout) {
-    let path = SVGRenderer.svgElement("circle");
-    const center = layout.cellToPoint(node),
+  static labelNode(node, layout) {
+    let text = SVGRenderer.svgElement("text");
+    const center =
+        node.type == "Vert"
+          ? layout.vertToPoint(node)
+          : layout.nodeToPoint(node),
+      nodeColors = {
+        Cell: "red",
+        Edge: "blue",
+        Vert: "green"
+      },
       attribs = [
         ["data-q", node.q],
         ["data-r", node.r],
         ["data-s", node.s],
-        ["r", "2"],
-        ["cx", center.x],
-        ["cy", center.y]
+        ["text-anchor", "middle"],
+        ["alignment-baseline", "middle"],
+        ["fill", nodeColors[node.type]],
+        /*        ["r", "2"],*/
+        ["x", center.x],
+        ["y", center.y]
       ];
     for (const attrib of attribs) {
-      path.setAttribute(attrib[0], attrib[1]);
+      text.setAttribute(attrib[0], attrib[1]);
     }
-    return path;
+    text.appendChild(document.createTextNode(node.id));
+    return text;
   }
 
   // TODO refactor to more functional style?
-  render(grid, layout) {
+  render(grid, layout, debug = false) {
     grid.nodes.forEach(node => {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if (node.type == "Edge" || node.type == "Cell") {
-        this.context.appendChild(SVGRenderer.markPoint(node, layout));
+      if (["Edge", "Cell"].includes(node.type) && debug) {
+        this.context.appendChild(SVGRenderer.labelNode(node, layout));
+      }
+      if (node.type == "Vert" && debug) {
+        this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
     });
   }
