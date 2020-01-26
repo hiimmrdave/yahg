@@ -16,6 +16,10 @@ function getFloat(elementId) {
   return parseFloat(document.querySelector("#" + elementId).value, 10);
 }
 
+function getCheckbox(elementId) {
+  return document.getElementById(elementId).checked;
+}
+
 function getForm() {
   const gridParams = {
       size: getIntValue("gs1"),
@@ -50,7 +54,7 @@ function rend() {
   }
   const { layout, grid, renderer } = makeGraph();
   grid.populate();
-  renderer.render(grid, layout);
+  renderer.render(grid, layout, getCheckbox("dbug"));
 }
 rend();
 
