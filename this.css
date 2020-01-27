@@ -3,26 +3,45 @@
     transform: scale(1.5);
   }
 }
+
 body {
   margin: 0;
+  padding: 0;
+  background-color: #eee;
+}
+
+#submain {
+  margin: 0;
+  padding: 0;
+  height: 0;
+}
+
+input[type="number"] {
+  width: 5em;
 }
 
 main {
+  padding: 1em;
   padding-top: 2.5em;
+}
+
+svg {
+  padding: 0;
+  margin: 0;
 }
 
 svg .hex,
 svg .cell {
   stroke: black;
-  fill: #eee;
+  fill: #ccc;
 }
 
 svg .redhex {
   fill: red;
 }
 
-body.wreath {
-  background: url("./img/xv.png");
+svg text {
+  font-size: 75%;
 }
 
 fieldset {
