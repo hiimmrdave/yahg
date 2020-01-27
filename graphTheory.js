@@ -522,10 +522,7 @@ class SVGRenderer extends Renderer {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if (["Edge", "Cell"].includes(node.type) && debug) {
-        this.context.appendChild(SVGRenderer.labelNode(node, layout));
-      }
-      if (node.type == "Vert" && debug) {
+      if (debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
     });
