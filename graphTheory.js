@@ -546,10 +546,13 @@ class CanvasRenderer extends Renderer {
     this.context.stroke(path);
   }
 
-  render(grid, layout) {
+  render(grid, layout, debug = false) {
     grid.nodes.forEach(node => {
       if (node.type == "Cell") {
         this.drawCell(node, layout);
+      }
+      if (debug) {
+        console.log(node.id);
       }
     });
   }

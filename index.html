@@ -1,96 +1,129 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>test</title>
-<link rel="stylesheet" href="this.css"></link>
-<link rel="stylesheet" href="icons.css"></link>
-<script src="./hexgraph.js"></script>
-</head>
-<body class="wreath">
-<header>
-  <a href="./index.html">Main</a>
-  <a href="./ajaxtest.html">AJAX spritesheet</a>
-  <a href="./img/build.svg">SVG build preview</a>
-</header>
-<main>
-<form id="icons" method="post">
-  <label for="icon">Icon to insert </label><select name="icon" id="icon">
-  </select><br />
-  <button id="resetgraph" type="button">Reset Graph</button>
-  <button id="showcoords" type="button">Show Coordinates</button>
-</form><br />
-<svg id="stest" xmlns="http://www.w3.org/2000/svg"
-  style="border: 1px solid black">
-</svg><br />
-<form id="params" method="get">
-  <fieldset>
-    <legend>Map properties</legend>
-    <input type="radio" id="hex" value="hex"
-      name="shape" checked="checked"></input>
-    <label for="hex">Hexagon</label>
+  <head>
+    <title>test</title>
+    <link rel="stylesheet" href="this.css" />
+    <link rel="stylesheet" href="icons.css" />
+    <script src="./graphTheory.js"></script>
+  </head>
+  <body class="wreath">
+    <header>
+      <a href="./index.html">Main</a>
+      <a href="./ajaxtest.html">AJAX spritesheet</a>
+      <a href="./img/build.svg">SVG build preview</a>
+    </header>
+    <div id="submain"></div>
+    <main>
+      <div id="st"><p>I felt like there should be a paragraph tag.</p></div>
+      <svg id="hg" xmlns="http://www.w3.org/2000/svg"></svg>
+      <form id="params" method="get">
+        <fieldset>
+          <legend>Map properties</legend>
+          <input
+            type="radio"
+            id="hex"
+            value="hex"
+            name="shape"
+            checked="checked"
+          />
+          <label for="hex">Hexagon</label>
 
-    <input type="radio" id="tri" value="tri" name="shape"></input>
-    <label for="tri">Triangle</label>
+          <input type="radio" id="tri" value="tri" name="shape" />
+          <label for="tri">Triangle</label>
 
-    <input type="radio" id="star" value="star" name="shape"></input>
-    <label for="star">Star</label>
+          <input type="radio" id="star" value="star" name="shape" />
+          <label for="star">Star</label>
 
-    <input type="radio" id="dia" value="dia" name="shape"></input>
-    <label for="dia">Diamond</label>
+          <input type="radio" id="para" value="para" name="shape" />
+          <label for="para">Parallelogram</label>
+          <!--
+          <input type="radio" id="rect" value="rect" name="shape" />
+          <label for="rect">Rectangle</label>-->
+          <br />
 
-    <input type="radio" id="para" value="para" name="shape"></input>
-    <label for="para">Parallelogram</label>
+          <label for="gs1">Size</label>
+          <input type="number" name="gs1" id="gs1" min="0" step="1" value="2" />
+          <!--
+          <label for="gs2">Size 2:</label>
+          <input type="number" name="gs2" id="gs2" min="0" step="1" value="5" />
+          -->
+          <label for="order">Order of coordinates:</label>
+          <input
+            type="number"
+            name="order"
+            id="order"
+            min="0"
+            max="5"
+            step="1"
+            value="0"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Layout properties</legend>
+          <label for="orientation">Orientation angle</label>
+          <input
+            type="number"
+            name="orientation"
+            id="orientation"
+            value="0"
+            min="0"
+            max="24"
+            step="0.1"
+          />
 
-    <input type="radio" id="rect" value="rect" name="shape"></input>
-    <label for="rect">Rectangle</label><br />
+          <label for="hsx">Hex Width</label>
+          <input type="number" name="hsx" id="hsx" step="1" value="100" />
 
-    <label for="gs1">Size 1:</label>
-    <input type="number" name="gs1" id="gs1"
-      min="0" step="1" value="2"></input>
+          <label for="hsy">Hex Height</label>
+          <input type="number" name="hsy" id="hsy" step="1" value="100" /><br />
 
-    <label for="gs2">Size 2:</label>
-    <input type="number" name="gs2" id="gs2"
-      min="0" step="1" value="5"></input><br />
+          <label for="orx">Origin X</label>
+          <input
+            type="number"
+            name="orx"
+            id="orx"
+            min="1"
+            step="1"
+            value="300"
+          />
 
-    <label for="order">Order of coordinates:</label>
-    <input type="number" name="order" id="order"
-      min="0" max="5" step="1" value="0"></input>
-  </fieldset>
-  <fieldset>
-    <legend>Layout properties</legend>
-    <label for="orientation">Orientation angle</label>
-    <input type="number" name="orientation" id="orientation"
-     value="0" min="0" max="24" step="0.1"></input>
+          <label for="ory">Origin Y</label>
+          <input
+            type="number"
+            name="ory"
+            id="ory"
+            min="1"
+            step="1"
+            value="300"
+          />
+        </fieldset>
+        <fieldset>
+          <legend>Canvas properties</legend>
+          <label for="csx">Canvas Width</label>
+          <input
+            type="number"
+            name="csx"
+            id="csx"
+            min="1"
+            step="1"
+            value="600"
+          />
 
-    <label for="hsx">Hex Width</label>
-    <input type="number" name="hsx" id="hsx"
-      step="1" value="50"></input>
+          <label for="csy">Canvas Height</label>
+          <input
+            type="number"
+            name="csy"
+            id="csy"
+            min="1"
+            step="1"
+            value="600"
+          />
 
-    <label for="hsy">Hex Height</label>
-    <input type="number" name="hsy" id="hsy"
-      step="1" value="50"></input><br />
-
-    <label for="orx">Origin X</label>
-    <input type="number" name="orx" id="orx"
-      min="1" step="1" value="500"></input>
-
-    <label for="ory">Origin Y</label>
-    <input type="number" name="ory" id="ory"
-      min="1" step="1" value="500"></input>
-  </fieldset>
-  <fieldset>
-    <legend>Canvas properties</legend>
-    <label for="csx">Canvas Width</label>
-    <input type="number" name="csx" id="csx"
-      min="1" step="1" value="1000"></input>
-
-    <label for="csy">Canvas Height</label>
-    <input type="number" name="csy" id="csy"
-      min="1" step="1" value="1000"></input>
-  </fieldset>
-</form><br />
-<canvas id="ctest"></canvas>
-<p id="debug"></p></main>
-<script src="./correcttest.js"></script>
-</body>
+          <input type="checkbox" name="dbug" id="dbug" />
+          <label for="dbug">Debug</label>
+        </fieldset>
+      </form>
+      <script src="theorytest.js"></script>
+    </main>
+  </body>
 </html>
