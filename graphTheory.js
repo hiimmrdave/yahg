@@ -115,6 +115,7 @@ class Cell extends HexNode {
     }, this);
   }
 
+  // sorta ugly
   get vertices() {
     // six vertices of this cell
     const vertCells = [
@@ -439,9 +440,8 @@ class Layout {
 }
 
 class Renderer {
-  constructor({ id = "hg", size = new Point({ x: 500, y: 500 }) } = {}) {
+  constructor({ size = new Point({ x: 500, y: 500 }) } = {}) {
     this.size = size;
-    this.context = document.getElementById(id);
   }
 
   static cellPath(cell, layout) {
@@ -454,7 +454,8 @@ class Renderer {
 
 class SVGRenderer extends Renderer {
   constructor({ id, size } = {}) {
-    super({ id, size });
+    super({ size });
+    this.context = document.getElementById(id);
     this.context.style.width = this.size.x;
     this.context.style.height = this.size.y;
   }
@@ -505,7 +506,6 @@ class SVGRenderer extends Renderer {
         ["text-anchor", "middle"],
         ["alignment-baseline", "middle"],
         ["fill", nodeColors[node.type]],
-        /*        ["r", "2"],*/
         ["x", center.x],
         ["y", center.y]
       ];
@@ -522,8 +522,34 @@ class SVGRenderer extends Renderer {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if (debug) {
+      if (["Edge", "Cell"].includes(node.type) && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
+      }
+      if (node.type == "Vert" && debug) {
+        this.context.appendChild(SVGRenderer.labelNode(node, layout));
+      }
+    });
+  }
+}
+
+class CanvasRenderer extends Renderer {
+  constructor({ id, size } = {}) {
+    super({ size });
+    this.canvas = document.getElementById(id);
+    this.context = this.canvas.getContext("2d");
+    this.canvas.width = size.x;
+    this.canvas.height = size.y;
+  }
+
+  drawCell(cell, layout) {
+    const path = new Path2D(Renderer.cellPath(cell, layout));
+    this.context.stroke(path);
+  }
+
+  render(grid, layout) {
+    grid.nodes.forEach(node => {
+      if (node.type == "Cell") {
+        this.drawCell(node, layout);
       }
     });
   }
