@@ -60,12 +60,3 @@ rend();
 
 const sub = document.querySelector("#submain");
 //const fback = document.querySelector("#st");
-
-fetch("./img/icons.svg")
-  .then(res => res.text())
-  .then(
-    text => new DOMParser().parseFromString(text, "image/svg+xml").firstChild
-  )
-  .then(doc => {
-    sub.appendChild(doc);
-  });
