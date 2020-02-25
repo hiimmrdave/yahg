@@ -18,7 +18,7 @@ const DIRECTIONS = [
     { q: -1, r: 2, s: -1 },
     { q: 1, r: 1, s: -2 }
   ],
-  //  HALF_PI = Math.PI / 2,
+  HALF_PI = Math.PI / 2,
   PI_OVER_THREE = Math.PI / 3,
   //  PI_OVER_SIX = Math.PI / 6,
   SQRT_THREE = Math.sqrt(3);
@@ -366,13 +366,13 @@ class Orientation {
     };
     //this part doesn't work yet
     this.b = {
-      x: {
-        q: thousandthRound(Math.sin(theta + 4 * PI_OVER_THREE) / SQRT_THREE),
-        r: thousandthRound(Math.sin(theta + Math.PI) / SQRT_THREE)
+      q: {
+        x: thousandthRound((Math.cos(theta) * 2) / 3),
+        y: thousandthRound((Math.sin(theta) * 2) / 3)
       },
-      y: {
-        q: thousandthRound(Math.cos(theta + 4 * PI_OVER_THREE) / SQRT_THREE),
-        r: thousandthRound(Math.cos(theta + Math.PI) / SQRT_THREE)
+      r: {
+        x: thousandthRound((Math.sin(theta + Math.PI) * 2) / 3),
+        y: thousandthRound((Math.cos(theta + Math.PI) * 2) / 3)
       }
     };
     this.v = {
@@ -419,10 +419,10 @@ class Layout {
         x: (p.x - this.origin.x) / this.size.x,
         y: (p.y - this.origin.y) / this.size.y
       }),
-      q = o.b.x.q * pt.x + o.b.y.q * pt.y,
-      r = o.b.x.r * pt.x + o.b.y.r * pt.y,
+      q = thousandthRound(o.b.q.x * pt.x + o.b.q.y * pt.y),
+      r = thousandthRound(o.b.r.x * pt.x + o.b.r.y * pt.y),
       s = thousandthRound(-q - r);
-    return { p, pt, q, r, s };
+    return { p, pt, q, wrong: { r, s } };
   }
 
   /* return the Vert nearest a given Point

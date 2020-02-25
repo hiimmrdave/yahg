@@ -63,7 +63,7 @@ function rend() {
   renderer.render(grid, layout, getCheckbox("dbug"));
   let gridG = createG();
   gridG.id = "grid";
-  gridG.setAttribute("stroke", "grey");
+  gridG.setAttribute("stroke", "rgba(0,0,0,0.25)");
   for (let x = renderer.size.x; x >= 0; x -= 50) {
     let xline = createLine();
     let yline = createLine();
