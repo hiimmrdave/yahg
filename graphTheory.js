@@ -1,5 +1,6 @@
 // since grids use the terms "vertex" and "edge", those terms
 // in a graph context will be called "node" and "link", respectively.
+// ⬡
 
 const DIRECTIONS = [
     { q: 1, r: 0, s: -1 },
@@ -363,14 +364,15 @@ class Orientation {
         y: thousandthRound(Math.cos(theta) * SQRT_THREE)
       }
     };
+    //this part doesn't work yet
     this.b = {
       x: {
-        q: thousandthRound((Math.cos(theta - 3) * -2) / 3),
-        r: thousandthRound((Math.sin(theta - 1) * 2) / 3)
+        q: thousandthRound(Math.sin(theta + 4 * PI_OVER_THREE) / SQRT_THREE),
+        r: thousandthRound(Math.sin(theta + Math.PI) / SQRT_THREE)
       },
       y: {
-        q: thousandthRound((Math.sin(theta - 3) * -2) / 3),
-        r: thousandthRound((Math.cos(theta - 1) * 2) / 3)
+        q: thousandthRound(Math.cos(theta + 4 * PI_OVER_THREE) / SQRT_THREE),
+        r: thousandthRound(Math.cos(theta + Math.PI) / SQRT_THREE)
       }
     };
     this.v = {
@@ -417,9 +419,10 @@ class Layout {
         x: (p.x - this.origin.x) / this.size.x,
         y: (p.y - this.origin.y) / this.size.y
       }),
-      q = pt.x * o.b.q.x + pt.y * o.b.q.y,
-      r = pt.x * o.b.r.x + pt.y * o.b.r.y;
-    return new Cell({ q, r, s: -q - r });
+      q = o.b.x.q * pt.x + o.b.y.q * pt.y,
+      r = o.b.x.r * pt.x + o.b.y.r * pt.y,
+      s = thousandthRound(-q - r);
+    return { p, pt, q, r, s };
   }
 
   /* return the Vert nearest a given Point
@@ -522,12 +525,12 @@ class SVGRenderer extends Renderer {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if (["Edge", "Cell"].includes(node.type) && debug) {
+      if ([/*"Edge",*/ "Cell"].includes(node.type) && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
-      if (node.type == "Vert" && debug) {
+      /*if (node.type == "Vert" && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
-      }
+      }*/
     });
   }
 }
