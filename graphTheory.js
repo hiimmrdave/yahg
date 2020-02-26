@@ -371,8 +371,8 @@ class Orientation {
         y: thousandthRound((Math.sin(theta) * 2) / 3)
       },
       r: {
-        x: thousandthRound((Math.sin(theta + Math.PI) * 2) / 3),
-        y: thousandthRound((Math.cos(theta + Math.PI) * 2) / 3)
+        x: thousandthRound((Math.cos(theta - 4 * PI_OVER_THREE) * 2) / 3),
+        y: thousandthRound((Math.sin(theta - 4 * PI_OVER_THREE) * 2) / 3)
       }
     };
     this.v = {
