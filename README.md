@@ -14,8 +14,9 @@ for now, refer to theorytest.js and graphTheory.html for examples
 ## status
 
 - graphTheory.js is the current working code.
-  - graphTheory.html and theorytest.js provide a demo
-- hexgraph.js is an earlier attempt which still contains useful concepts not yet implemented in newer version
-  - correcttest.js, and index.html are the demo for hexgraph.js
-  - icons.css styles the SVG icons
+  - index.html and theorytest.js provide a demo
 - this.css styles the html demos
+- readme.md is severely behind
+https://horsedreamer.github.io/yahg/index.html is a demo in browser
+
+clicking the svg can give the x,y and q,r,s coordinates, but it's not right yet. specifically, x and y are correct, q is probably right, and r and s are wrong if you're not in orientation angle 0.
