@@ -1,7 +1,7 @@
 const inputs = document.querySelector('form[id="params"]'),
   renderContext = document.querySelector("#hg"),
   fback = document.querySelector("#st"),
-  sub = document.querySelector("#submain"),
+  // sub = document.querySelector("#submain"),
   svgns = "http://www.w3.org/2000/svg";
 
 inputs.onchange = rend;

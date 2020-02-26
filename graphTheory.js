@@ -18,7 +18,7 @@ const DIRECTIONS = [
     { q: -1, r: 2, s: -1 },
     { q: 1, r: 1, s: -2 }
   ],
-  HALF_PI = Math.PI / 2,
+  //  HALF_PI = Math.PI / 2,
   PI_OVER_THREE = Math.PI / 3,
   //  PI_OVER_SIX = Math.PI / 6,
   SQRT_THREE = Math.sqrt(3);
@@ -411,7 +411,9 @@ class Layout {
   edgeToPoint ( e ) {
     return;
   }
-  ...somehow */
+  ...somehow
+this involves finding the correct relative coordinates of the edge in qrs space
+  */
 
   pointToCell(p) {
     const o = this.orientation,
@@ -422,7 +424,8 @@ class Layout {
       q = thousandthRound(o.b.q.x * pt.x + o.b.q.y * pt.y),
       r = thousandthRound(o.b.r.x * pt.x + o.b.r.y * pt.y),
       s = thousandthRound(-q - r);
-    return { p, pt, q, wrong: { r, s } };
+    console.log({ p, pt, q, r, s });
+    return new Cell({ q, r, s });
   }
 
   /* return the Vert nearest a given Point
@@ -525,7 +528,7 @@ class SVGRenderer extends Renderer {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if ([/*"Edge",*/ "Cell"].includes(node.type) && debug) {
+      if (["Edge", "Cell"].includes(node.type) && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
       /*if (node.type == "Vert" && debug) {
