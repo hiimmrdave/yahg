@@ -1,6 +1,7 @@
-// since grids use the terms "vertex" and "edge", those terms
-// in a graph context will be called "node" and "link", respectively.
-// ⬡
+/* since grids use the terms "vertex" and "edge", those terms
+   in a graph context will be called "node" and "link", respectively.
+   ⬡
+ */
 
 const DIRECTIONS = [
     { q: 1, r: 0, s: -1 },
@@ -22,13 +23,13 @@ const DIRECTIONS = [
   PI_OVER_THREE = Math.PI / 3,
   //  PI_OVER_SIX = Math.PI / 6,
   SQRT_THREE = Math.sqrt(3);
-
+//
 function thousandthRound(n) {
   return Math.round(n * 1000) / 1000 + 0;
 }
 
 function lerp(m, n, t) {
-  return m.q * (1 - t) + n.q * t;
+  return m * (1 - t) + n * t;
 }
 
 class HexNode {
@@ -103,8 +104,8 @@ class Cell extends HexNode {
     return new Cell(round);
   }
 
+  // six cells neighboring this cell
   get cells() {
-    // six cells neighboring this cell
     return DIRECTIONS.map(function(vector) {
       return new Cell(Cell.plus(this, vector));
     }, this);
@@ -116,9 +117,9 @@ class Cell extends HexNode {
     }, this);
   }
 
-  // sorta ugly
+  // TODO sorta ugly
+  // six vertices of this cell
   get vertices() {
-    // six vertices of this cell
     const vertCells = [
       this,
       this.cells[1],
@@ -134,8 +135,8 @@ class Cell extends HexNode {
     });
   }
 
+  // six edges of this cell
   get edges() {
-    // six edges of this cell
     return DIRECTIONS.map(
       dir => new Edge(Cell.plus(this, Cell.times(dir, 0.5)))
     );
@@ -186,7 +187,8 @@ class Vert extends HexNode {
     return new Cell({ q: this.q, r: this.r, s: this.s });
   }
 
-  /* returns three Cells which share this Vert
+  /* 
+  TODO: returns three Cells which share this Vert
   get cells () {
     return [
       this.cell,
@@ -211,7 +213,8 @@ class Vert extends HexNode {
     ];
   }
 
-  /* returns three Edges which have this Vert as an endpoint
+  /* 
+  TODO: returns three Edges which have this Vert as an endpoint
   get edges () {
     return [
       new Edge(),
@@ -228,7 +231,8 @@ class Edge extends HexNode {
     this.type = "Edge";
   }
 
-  /* returns two cells which share this edge
+  /* 
+  TODO: returns two cells which share this edge
   get cells () {
     return [
       new Cell(),
@@ -237,7 +241,8 @@ class Edge extends HexNode {
   }
   ...somehow */
 
-  /* returns two vertices at endpoints of this edge
+  /* 
+  TODO: returns two vertices at endpoints of this edge
   get vertices () {
     return [
       new Vert(),
@@ -246,7 +251,8 @@ class Edge extends HexNode {
   }
   ...somehow */
 
-  /*  returns four edges which share an endpoint with this edge
+  /*  
+  TODO: returns four edges which share an endpoint with this edge
   get edges () {
     return [
       new Edge(),
@@ -258,6 +264,7 @@ class Edge extends HexNode {
   ...somehow */
 }
 
+// eslint-disable-next-line no-unused-vars
 class Grid {
   constructor({ shape = "hex", size = 2, order = 0 } = {}) {
     this.nodes = new Set();
@@ -272,19 +279,25 @@ class Grid {
     this.order = ["qrs", "qsr", "rqs", "rsq", "sqr", "srq"][order];
   }
 
-  // this is side-effecty and state-dependent
+  /*
+  ! this is side-effecty and state-dependent
+  */
   populate() {
     this[this.shape + "Grid"]();
     return this.nodes;
   }
 
-  // this is side-effecty
+  /*
+  ! this is side-effecty
+  */
   depopulate() {
     this.nodes.clear();
     return this.nodes;
   }
 
-  // this is side-effecty and state-dependent
+  /*
+  ! this is side-effecty and state-dependent
+  */
   addCell(a, b) {
     const ab = [a, b, -1 * a - b],
       ins = {
@@ -305,6 +318,9 @@ class Grid {
       edge.links.set(cell, { type: "hasCell" });
     }
   }
+  /*
+  TODO: these can all be improved?
+  */
 
   hexGrid() {
     for (let ia = -this.size; ia <= this.size; ia++) {
@@ -343,7 +359,7 @@ class Grid {
   }
 }
 
-// rendering specifics
+// * rendering specifics
 
 class Point {
   constructor({ x, y }) {
@@ -364,7 +380,10 @@ class Orientation {
         y: thousandthRound(Math.cos(theta) * SQRT_THREE)
       }
     };
-    //this part doesn't work yet
+    /*
+    TODO: this part doesn't work yet
+    TODO: I have do do some geometry and linear algebra
+    */
     this.b = {
       q: {
         x: thousandthRound((Math.cos(theta) * 2) / 3),
@@ -382,6 +401,7 @@ class Orientation {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 class Layout {
   constructor({
     theta = 0,
@@ -407,12 +427,13 @@ class Layout {
     return new Point({ x, y });
   }
 
-  /* return the point at the midpoint of an Edge
+  /* 
+  TODO: return the point at the midpoint of an Edge
+  this involves finding the correct relative coordinates of the edge in qrs space
   edgeToPoint ( e ) {
     return;
   }
   ...somehow
-this involves finding the correct relative coordinates of the edge in qrs space
   */
 
   pointToCell(p) {
@@ -428,13 +449,15 @@ this involves finding the correct relative coordinates of the edge in qrs space
     return new Cell({ q, r, s });
   }
 
-  /* return the Vert nearest a given Point
+  /*
+  TODO: return the Vert nearest a given Point
   pointToVert ( p ) {
     return;
   }
   ...somehow */
 
-  /* return the edge nearest a given Point
+  /*
+  TODO: return the edge nearest a given Point
   pointToEdge ( e ) {
     return;
   }
@@ -458,6 +481,7 @@ class Renderer {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 class SVGRenderer extends Renderer {
   constructor({ id, size } = {}) {
     super({ size });
@@ -538,6 +562,7 @@ class SVGRenderer extends Renderer {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 class CanvasRenderer extends Renderer {
   constructor({ id, size } = {}) {
     super({ size });
