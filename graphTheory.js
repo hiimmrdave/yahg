@@ -90,9 +90,9 @@ class Cell extends HexNode {
         s: Math.round(this.s)
       },
       offset = {
-        q: Math.round(this.q - round.q),
-        r: Math.round(this.r - round.r),
-        s: Math.round(this.s - round.s)
+        q: Math.abs(this.q - round.q),
+        r: Math.abs(this.r - round.r),
+        s: Math.abs(this.s - round.s)
       };
     if (offset.q > offset.r && offset.q > offset.s) {
       round.q = -1 * round.r - round.s;
