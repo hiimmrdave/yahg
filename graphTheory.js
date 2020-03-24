@@ -19,11 +19,11 @@ const DIRECTIONS = [
     { q: -1, r: 2, s: -1 },
     { q: 1, r: 1, s: -2 }
   ],
-  //  HALF_PI = Math.PI / 2,
+  HALF_PI = Math.PI / 2,
   PI_OVER_THREE = Math.PI / 3,
-  //  PI_OVER_SIX = Math.PI / 6,
+  PI_OVER_SIX = Math.PI / 6,
   SQRT_THREE = Math.sqrt(3);
-//
+
 function thousandthRound(n) {
   return Math.round(n * 1000) / 1000 + 0;
 }
@@ -371,27 +371,23 @@ class Point {
 class Orientation {
   constructor({ theta = 0 } = {}) {
     this.f = {
-      q: {
-        x: thousandthRound(Math.sin(theta + PI_OVER_THREE) * SQRT_THREE),
-        y: thousandthRound(Math.cos(theta + PI_OVER_THREE) * SQRT_THREE)
+      x: {
+        q: thousandthRound(Math.cos(theta - PI_OVER_SIX) * SQRT_THREE),
+        r: thousandthRound(Math.cos(theta - HALF_PI) * SQRT_THREE)
       },
-      r: {
-        x: thousandthRound(Math.sin(theta) * SQRT_THREE),
-        y: thousandthRound(Math.cos(theta) * SQRT_THREE)
+      y: {
+        q: thousandthRound(Math.sin(theta + 5 * PI_OVER_SIX) * SQRT_THREE),
+        r: thousandthRound(Math.sin(theta + HALF_PI) * SQRT_THREE)
       }
     };
-    /*
-    TODO: this part doesn't work yet
-    TODO: I have do do some geometry and linear algebra
-    */
     this.b = {
       q: {
         x: thousandthRound((Math.cos(theta) * 2) / 3),
-        y: thousandthRound((Math.sin(theta) * 2) / 3)
+        y: thousandthRound((Math.sin(theta) * -2) / 3)
       },
       r: {
-        x: thousandthRound((Math.cos(theta - 4 * PI_OVER_THREE) * 2) / 3),
-        y: thousandthRound((Math.sin(theta - 4 * PI_OVER_THREE) * 2) / 3)
+        x: thousandthRound((Math.cos(theta + PI_OVER_THREE) * -2) / 3),
+        y: thousandthRound((Math.sin(theta + PI_OVER_THREE) * 2) / 3)
       }
     };
     this.v = {
