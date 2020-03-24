@@ -411,8 +411,8 @@ class Layout {
 
   nodeToPoint(c) {
     const o = this.orientation,
-      x = (o.f.q.x * c.q + o.f.r.x * c.r) * this.size.x + this.origin.x,
-      y = (o.f.q.y * c.q + o.f.r.y * c.r) * this.size.y + this.origin.y;
+      x = (o.f.x.q * c.q + o.f.x.r * c.r) * this.size.x + this.origin.x,
+      y = (o.f.y.q * c.q + o.f.y.r * c.r) * this.size.y + this.origin.y;
     return new Point({ x, y });
   }
 
