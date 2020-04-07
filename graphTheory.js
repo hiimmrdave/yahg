@@ -3,6 +3,7 @@
    ⬡
  */
 
+ //ok
 const DIRECTIONS = [
     { q: 1, r: 0, s: -1 },
     { q: 1, r: -1, s: 0 },
@@ -19,19 +20,23 @@ const DIRECTIONS = [
     { q: -1, r: 2, s: -1 },
     { q: 1, r: 1, s: -2 }
   ],
+  //ok
   HALF_PI = Math.PI / 2,
+  //skipped
   PI_OVER_THREE = Math.PI / 3,
+  //ok
   PI_OVER_SIX = Math.PI / 6,
+  //ok
   SQRT_THREE = Math.sqrt(3);
-
+//ok
 function thousandthRound(n) {
   return Math.round(n * 1000) / 1000 + 0;
 }
-
+//ok
 function lerp(m, n, t) {
   return m * (1 - t) + n * t;
 }
-
+//ok
 class HexNode {
   constructor({ q, r, s = -q - r }) {
     this.q = q;
@@ -40,7 +45,7 @@ class HexNode {
     this.id = `${q},${r},${s}`;
     this.links = new WeakMap();
   }
-
+//ok
   equals({ id }) {
     return this.id === id;
   }
@@ -58,7 +63,7 @@ class Cell extends HexNode {
       console.log("invalid coordinates");
     }
   }
-
+//ok
   static plus(a, b) {
     return new Cell({
       q: a.q + b.q,
@@ -66,7 +71,7 @@ class Cell extends HexNode {
       s: a.s + b.s
     });
   }
-
+//ok
   static minus(a, b) {
     return new Cell({
       q: a.q - b.q,
@@ -74,7 +79,7 @@ class Cell extends HexNode {
       s: a.s - b.s
     });
   }
-
+//ok
   static times(cell, factor) {
     return new Cell({
       q: cell.q * factor,
@@ -82,7 +87,7 @@ class Cell extends HexNode {
       s: cell.s * factor
     });
   }
-
+//copypasta'd
   get round() {
     const round = {
         q: Math.round(this.q),
@@ -105,12 +110,13 @@ class Cell extends HexNode {
   }
 
   // six cells neighboring this cell
+  //ok
   get cells() {
     return DIRECTIONS.map(function(vector) {
       return new Cell(Cell.plus(this, vector));
     }, this);
   }
-
+//ok
   get diagonals() {
     return DIAGONALS.map(function(vector) {
       return new Cell(Cell.plus(this, vector));
@@ -119,6 +125,7 @@ class Cell extends HexNode {
 
   // TODO sorta ugly
   // six vertices of this cell
+  //todo'd -- changed the whole thing to rely on full qrs coordinates, so these are 2/3, -1/3, -1/3 and rotations thereof (I think?)
   get vertices() {
     const vertCells = [
       this,
@@ -136,21 +143,24 @@ class Cell extends HexNode {
   }
 
   // six edges of this cell
+  //ok
   get edges() {
     return DIRECTIONS.map(
       dir => new Edge(Cell.plus(this, Cell.times(dir, 0.5)))
     );
   }
 
+  //todo I want to write this in a node-generalized form
   static distance(a, b) {
     return Cell.length(Cell.minus(a, b));
   }
 
+  //todo I want to write this in a node-generalized form
   static length(cell) {
     return Math.max(Math.abs(cell.q), Math.abs(cell.r), Math.abs(cell.s));
   }
 
-  // TODO fix this, don't be lazy
+  //ok and generalized to node
   static lerp(a, b, t) {
     return new Cell({
       q: lerp(a.q, b.q, t),
@@ -183,12 +193,14 @@ class Vert extends HexNode {
   }
 
   // returns the Cell that this Vert "belongs" to
+  // uhh... do vertices belong to cells???
   get cell() {
     return new Cell({ q: this.q, r: this.r, s: this.s });
   }
 
   /* 
   TODO: returns three Cells which share this Vert
+  /stubbed in verts
   get cells () {
     return [
       this.cell,
@@ -199,6 +211,7 @@ class Vert extends HexNode {
   ...somehow */
 
   // returns three Verts that share edges with this Vert
+  //stubbed in verts
   get vertices() {
     const { q, r, s, v } = this,
       negV = -1 * v,
@@ -215,6 +228,7 @@ class Vert extends HexNode {
 
   /* 
   TODO: returns three Edges which have this Vert as an endpoint
+  /stubbed in verts
   get edges () {
     return [
       new Edge(),
@@ -233,6 +247,7 @@ class Edge extends HexNode {
 
   /* 
   TODO: returns two cells which share this edge
+  /stubbed
   get cells () {
     return [
       new Cell(),
@@ -243,6 +258,7 @@ class Edge extends HexNode {
 
   /* 
   TODO: returns two vertices at endpoints of this edge
+  /stubbed
   get vertices () {
     return [
       new Vert(),
@@ -253,6 +269,7 @@ class Edge extends HexNode {
 
   /*  
   TODO: returns four edges which share an endpoint with this edge
+  /stubbed
   get edges () {
     return [
       new Edge(),
