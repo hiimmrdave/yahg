@@ -426,6 +426,7 @@ class Layout {
     this.origin = origin;
   }
 
+  //ok as cubetoPoint
   nodeToPoint(c) {
     const o = this.orientation,
       x = (o.f.x.q * c.q + o.f.x.r * c.r) * this.size.x + this.origin.x,
@@ -433,6 +434,7 @@ class Layout {
     return new Point({ x, y });
   }
 
+  //covered by generic cubeToPoint and handling verts as cube coordinates
   vertToPoint(v) {
     const o = this.orientation,
       x = o.v.x * this.size.x * v.v + this.nodeToPoint(v.cell).x,
@@ -442,6 +444,7 @@ class Layout {
 
   /* 
   TODO: return the point at the midpoint of an Edge
+  /covered by generic cubeToPoint and handling edges as cube coordinates
   this involves finding the correct relative coordinates of the edge in qrs space
   edgeToPoint ( e ) {
     return;
@@ -449,6 +452,7 @@ class Layout {
   ...somehow
   */
 
+  //ok as pointToCube
   pointToCell(p) {
     const o = this.orientation,
       pt = new Point({
@@ -464,6 +468,7 @@ class Layout {
 
   /*
   TODO: return the Vert nearest a given Point
+  /covered by generic pointToCube and handling verts as cube coordinates
   pointToVert ( p ) {
     return;
   }
@@ -471,6 +476,7 @@ class Layout {
 
   /*
   TODO: return the edge nearest a given Point
+  /covered by generic pointToCube and handling verts as cube coordinates
   pointToEdge ( e ) {
     return;
   }
