@@ -3,15 +3,15 @@
    ⬡
  */
 
- //ok
+//ok
 const DIRECTIONS = [
-    { q: 1, r: 0, s: -1 },
-    { q: 1, r: -1, s: 0 },
-    { q: 0, r: -1, s: 1 },
-    { q: -1, r: 0, s: 1 },
-    { q: -1, r: 1, s: 0 },
-    { q: 0, r: 1, s: -1 }
-  ],
+  { q: 1, r: 0, s: -1 },
+  { q: 1, r: -1, s: 0 },
+  { q: 0, r: -1, s: 1 },
+  { q: -1, r: 0, s: 1 },
+  { q: -1, r: 1, s: 0 },
+  { q: 0, r: 1, s: -1 }
+],
   DIAGONALS = [
     { q: 2, r: -1, s: -1 },
     { q: 1, r: -2, s: 1 },
@@ -45,7 +45,7 @@ class HexNode {
     this.id = `${q},${r},${s}`;
     this.links = new WeakMap();
   }
-//ok
+  //ok
   equals({ id }) {
     return this.id === id;
   }
@@ -63,7 +63,7 @@ class Cell extends HexNode {
       console.log("invalid coordinates");
     }
   }
-//ok
+  //ok
   static plus(a, b) {
     return new Cell({
       q: a.q + b.q,
@@ -71,7 +71,7 @@ class Cell extends HexNode {
       s: a.s + b.s
     });
   }
-//ok
+  //ok
   static minus(a, b) {
     return new Cell({
       q: a.q - b.q,
@@ -79,7 +79,7 @@ class Cell extends HexNode {
       s: a.s - b.s
     });
   }
-//ok
+  //ok
   static times(cell, factor) {
     return new Cell({
       q: cell.q * factor,
@@ -87,13 +87,13 @@ class Cell extends HexNode {
       s: cell.s * factor
     });
   }
-//copypasta'd
+  //copypasta'd
   get round() {
     const round = {
-        q: Math.round(this.q),
-        r: Math.round(this.r),
-        s: Math.round(this.s)
-      },
+      q: Math.round(this.q),
+      r: Math.round(this.r),
+      s: Math.round(this.s)
+    },
       offset = {
         q: Math.abs(this.q - round.q),
         r: Math.abs(this.r - round.r),
@@ -112,13 +112,13 @@ class Cell extends HexNode {
   // six cells neighboring this cell
   //ok
   get cells() {
-    return DIRECTIONS.map(function(vector) {
+    return DIRECTIONS.map(function (vector) {
       return new Cell(Cell.plus(this, vector));
     }, this);
   }
-//ok
+  //ok
   get diagonals() {
-    return DIAGONALS.map(function(vector) {
+    return DIAGONALS.map(function (vector) {
       return new Cell(Cell.plus(this, vector));
     }, this);
   }
@@ -136,7 +136,7 @@ class Cell extends HexNode {
       this.cells[0]
     ];
     let vert = -1;
-    return vertCells.map(function(cell) {
+    return vertCells.map(function (cell) {
       vert = -vert;
       return new Vert(cell, vert);
     });
@@ -540,9 +540,9 @@ class SVGRenderer extends Renderer {
   static labelNode(node, layout) {
     let text = SVGRenderer.svgElement("text");
     const center =
-        node.type == "Vert"
-          ? layout.vertToPoint(node)
-          : layout.nodeToPoint(node),
+      node.type == "Vert"
+        ? layout.vertToPoint(node)
+        : layout.nodeToPoint(node),
       nodeColors = {
         Cell: "red",
         Edge: "blue",
@@ -574,9 +574,9 @@ class SVGRenderer extends Renderer {
       if (["Edge", "Cell"].includes(node.type) && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
-      /*if (node.type == "Vert" && debug) {
+      if (node.type == "Vert" && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
-      }*/
+      }
     });
   }
 }
