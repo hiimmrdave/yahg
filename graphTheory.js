@@ -5,20 +5,20 @@
 
 //ok
 const DIRECTIONS = [
-  { q: 1, r: 0, s: -1 },
-  { q: 1, r: -1, s: 0 },
-  { q: 0, r: -1, s: 1 },
-  { q: -1, r: 0, s: 1 },
-  { q: -1, r: 1, s: 0 },
-  { q: 0, r: 1, s: -1 }
-],
+    { q: 1, r: 0, s: -1 },
+    { q: 1, r: -1, s: 0 },
+    { q: 0, r: -1, s: 1 },
+    { q: -1, r: 0, s: 1 },
+    { q: -1, r: 1, s: 0 },
+    { q: 0, r: 1, s: -1 },
+  ],
   DIAGONALS = [
     { q: 2, r: -1, s: -1 },
     { q: 1, r: -2, s: 1 },
     { q: -1, r: -1, s: 2 },
     { q: -2, r: 1, s: 1 },
     { q: -1, r: 2, s: -1 },
-    { q: 1, r: 1, s: -2 }
+    { q: 1, r: 1, s: -2 },
   ],
   //ok
   HALF_PI = Math.PI / 2,
@@ -68,7 +68,7 @@ class Cell extends HexNode {
     return new Cell({
       q: a.q + b.q,
       r: a.r + b.r,
-      s: a.s + b.s
+      s: a.s + b.s,
     });
   }
   //ok
@@ -76,7 +76,7 @@ class Cell extends HexNode {
     return new Cell({
       q: a.q - b.q,
       r: a.r - b.r,
-      s: a.s - b.s
+      s: a.s - b.s,
     });
   }
   //ok
@@ -84,20 +84,20 @@ class Cell extends HexNode {
     return new Cell({
       q: cell.q * factor,
       r: cell.r * factor,
-      s: cell.s * factor
+      s: cell.s * factor,
     });
   }
   //copypasta'd
   get round() {
     const round = {
-      q: Math.round(this.q),
-      r: Math.round(this.r),
-      s: Math.round(this.s)
-    },
+        q: Math.round(this.q),
+        r: Math.round(this.r),
+        s: Math.round(this.s),
+      },
       offset = {
         q: Math.abs(this.q - round.q),
         r: Math.abs(this.r - round.r),
-        s: Math.abs(this.s - round.s)
+        s: Math.abs(this.s - round.s),
       };
     if (offset.q > offset.r && offset.q > offset.s) {
       round.q = -1 * round.r - round.s;
@@ -133,7 +133,7 @@ class Cell extends HexNode {
       this.cells[3],
       this,
       this.cells[4],
-      this.cells[0]
+      this.cells[0],
     ];
     let vert = -1;
     return vertCells.map(function (cell) {
@@ -146,7 +146,7 @@ class Cell extends HexNode {
   //ok
   get edges() {
     return DIRECTIONS.map(
-      dir => new Edge(Cell.plus(this, Cell.times(dir, 0.5)))
+      (dir) => new Edge(Cell.plus(this, Cell.times(dir, 0.5)))
     );
   }
 
@@ -165,7 +165,7 @@ class Cell extends HexNode {
     return new Cell({
       q: lerp(a.q, b.q, t),
       r: lerp(a.r, b.r, t),
-      s: lerp(a.s, b.s, t)
+      s: lerp(a.s, b.s, t),
     }).round;
   }
 
@@ -222,7 +222,7 @@ class Vert extends HexNode {
     return [
       new Vert(neighborA, negV),
       new Vert(neighborB, negV),
-      new Vert(diagonal, negV)
+      new Vert(diagonal, negV),
     ];
   }
 
@@ -320,7 +320,7 @@ class Grid {
       ins = {
         q: ab[this.order.indexOf("q")],
         r: ab[this.order.indexOf("r")],
-        s: ab[this.order.indexOf("s")]
+        s: ab[this.order.indexOf("s")],
       },
       cell = new Cell({ q: ins.q, r: ins.r, s: ins.s });
     this.nodes.add(cell);
@@ -390,26 +390,26 @@ class Orientation {
     this.f = {
       x: {
         q: thousandthRound(Math.cos(theta - PI_OVER_SIX) * SQRT_THREE),
-        r: thousandthRound(Math.cos(theta - HALF_PI) * SQRT_THREE)
+        r: thousandthRound(Math.cos(theta - HALF_PI) * SQRT_THREE),
       },
       y: {
         q: thousandthRound(Math.sin(theta + 5 * PI_OVER_SIX) * SQRT_THREE),
-        r: thousandthRound(Math.sin(theta + HALF_PI) * SQRT_THREE)
-      }
+        r: thousandthRound(Math.sin(theta + HALF_PI) * SQRT_THREE),
+      },
     };
     this.b = {
       q: {
         x: thousandthRound((Math.cos(theta) * 2) / 3),
-        y: thousandthRound((Math.sin(theta) * -2) / 3)
+        y: thousandthRound((Math.sin(theta) * -2) / 3),
       },
       r: {
         x: thousandthRound((Math.cos(theta + PI_OVER_THREE) * -2) / 3),
-        y: thousandthRound((Math.sin(theta + PI_OVER_THREE) * 2) / 3)
-      }
+        y: thousandthRound((Math.sin(theta + PI_OVER_THREE) * 2) / 3),
+      },
     };
     this.v = {
       x: thousandthRound(Math.cos(theta)),
-      y: thousandthRound(-1 * Math.sin(theta))
+      y: thousandthRound(-1 * Math.sin(theta)),
     };
   }
 }
@@ -419,7 +419,7 @@ class Layout {
   constructor({
     theta = 0,
     cellSize = new Point({ x: 50, y: 50 }),
-    origin = new Point({ x: 0, y: 0 })
+    origin = new Point({ x: 0, y: 0 }),
   } = {}) {
     this.orientation = new Orientation({ theta });
     this.size = cellSize;
@@ -457,7 +457,7 @@ class Layout {
     const o = this.orientation,
       pt = new Point({
         x: (p.x - this.origin.x) / this.size.x,
-        y: (p.y - this.origin.y) / this.size.y
+        y: (p.y - this.origin.y) / this.size.y,
       }),
       q = thousandthRound(o.b.q.x * pt.x + o.b.q.y * pt.y),
       r = thousandthRound(o.b.r.x * pt.x + o.b.r.y * pt.y),
@@ -483,7 +483,7 @@ class Layout {
   ...somehow */
 
   vertsToPoints(cell) {
-    return cell.vertices.map(vert => this.vertToPoint(vert));
+    return cell.vertices.map((vert) => this.vertToPoint(vert));
   }
 }
 
@@ -494,7 +494,7 @@ class Renderer {
 
   static cellPath(cell, layout) {
     const verts = layout.vertsToPoints(cell);
-    let ret = verts.map(v => `L ${v.x},${v.y}`);
+    let ret = verts.map((v) => `L ${v.x},${v.y}`);
     ret.unshift(`M ${verts[5].x},${verts[5].y}`);
     return ret.join(" ") + " z";
   }
@@ -524,10 +524,10 @@ class SVGRenderer extends Renderer {
         ["data-q", cell.q],
         ["data-r", cell.r],
         ["data-s", cell.s],
-        ["d", Renderer.cellPath(cell, layout)]
+        ["d", Renderer.cellPath(cell, layout)],
       ],
       styles = {
-        transformOrigin: `${center.x}px ${center.y}px`
+        transformOrigin: `${center.x}px ${center.y}px`,
       };
     for (const attrib of attribs) {
       path.setAttribute(attrib[0], attrib[1]);
@@ -540,13 +540,13 @@ class SVGRenderer extends Renderer {
   static labelNode(node, layout) {
     let text = SVGRenderer.svgElement("text");
     const center =
-      node.type == "Vert"
-        ? layout.vertToPoint(node)
-        : layout.nodeToPoint(node),
+        node.type == "Vert"
+          ? layout.vertToPoint(node)
+          : layout.nodeToPoint(node),
       nodeColors = {
         Cell: "red",
         Edge: "blue",
-        Vert: "green"
+        Vert: "green",
       },
       attribs = [
         ["data-q", node.q],
@@ -556,25 +556,23 @@ class SVGRenderer extends Renderer {
         ["alignment-baseline", "middle"],
         ["fill", nodeColors[node.type]],
         ["x", center.x],
-        ["y", center.y]
+        ["y", center.y],
       ];
     for (const attrib of attribs) {
       text.setAttribute(attrib[0], attrib[1]);
     }
-    text.appendChild(document.createTextNode(node.id));
+    let label = node.type == "Vert" ? layout.pointToCell(center).id : node.id;
+    text.appendChild(document.createTextNode(label));
     return text;
   }
 
   // TODO refactor to more functional style?
   render(grid, layout, debug = false) {
-    grid.nodes.forEach(node => {
+    grid.nodes.forEach((node) => {
       if (node.type == "Cell") {
         this.context.appendChild(SVGRenderer.buildCell(node, layout));
       }
-      if (["Edge", "Cell"].includes(node.type) && debug) {
-        this.context.appendChild(SVGRenderer.labelNode(node, layout));
-      }
-      if (node.type == "Vert" && debug) {
+      if (["Vert", "Edge", "Cell"].includes(node.type) && debug) {
         this.context.appendChild(SVGRenderer.labelNode(node, layout));
       }
     });
@@ -597,7 +595,7 @@ class CanvasRenderer extends Renderer {
   }
 
   render(grid, layout, debug = false) {
-    grid.nodes.forEach(node => {
+    grid.nodes.forEach((node) => {
       if (node.type == "Cell") {
         this.drawCell(node, layout);
       }
