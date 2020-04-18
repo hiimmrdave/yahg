@@ -493,10 +493,14 @@ class Renderer {
   }
 
   static cellPath(cell, layout) {
-    const verts = layout.vertsToPoints(cell);
-    let ret = verts.map((v) => `L ${v.x},${v.y}`);
-    ret.unshift(`M ${verts[5].x},${verts[5].y}`);
-    return ret.join(" ") + " z";
+    return (
+      "M" +
+      layout
+        .vertsToPoints(cell)
+        .map((e) => `${e.x},${e.y}`)
+        .join(" L") +
+      "z"
+    );
   }
 }
 
