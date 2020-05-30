@@ -52,6 +52,7 @@ class HexNode {
 }
 
 class Cell extends HexNode {
+  //ok
   constructor({ q, r, s = -q - r }) {
     super({ q, r, s });
     this.q = q + 0;
