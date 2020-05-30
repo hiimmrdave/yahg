@@ -127,6 +127,7 @@ class Cell extends HexNode {
   // TODO sorta ugly
   // six vertices of this cell
   //todo'd -- changed the whole thing to rely on full qrs coordinates, so these are 2/3, -1/3, -1/3 and rotations thereof (I think?)
+  // ok
   get vertices() {
     const vertCells = [
       this,
@@ -157,6 +158,7 @@ class Cell extends HexNode {
   }
 
   //todo I want to write this in a node-generalized form
+  //ok in hex
   static length(cell) {
     return Math.max(Math.abs(cell.q), Math.abs(cell.r), Math.abs(cell.s));
   }
