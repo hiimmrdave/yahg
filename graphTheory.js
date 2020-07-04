@@ -153,6 +153,7 @@ class Cell extends HexNode {
   }
 
   //todo I want to write this in a node-generalized form
+  //ok in hex
   static distance(a, b) {
     return Cell.length(Cell.minus(a, b));
   }
