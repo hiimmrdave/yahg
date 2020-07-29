@@ -496,6 +496,7 @@ class Renderer {
     this.size = size;
   }
 
+  //done
   static cellPath(cell, layout) {
     return (
       "M" +
@@ -517,14 +518,17 @@ class SVGRenderer extends Renderer {
     this.context.style.height = this.size.y;
   }
 
+  // done
   static get svgns() {
     return "http://www.w3.org/2000/svg";
   }
 
+  //got it
   static svgElement(element) {
     return document.createElementNS(SVGRenderer.svgns, element);
   }
 
+  //yep
   static buildCell(cell, layout) {
     let path = SVGRenderer.svgElement("path");
     const center = layout.nodeToPoint(cell),
@@ -575,6 +579,7 @@ class SVGRenderer extends Renderer {
   }
 
   // TODO refactor to more functional style?
+  // nah updating the DOM is inherently side-effectual, but it could be cleaner
   render(grid, layout, debug = false) {
     grid.nodes.forEach((node) => {
       if (node.type == "Cell") {
