@@ -205,6 +205,7 @@ class Vert extends HexNode {
   /* 
   TODO: returns three Cells which share this Vert
   /stubbed in verts
+  /done
   get cells () {
     return [
       this.cell,
@@ -233,6 +234,7 @@ class Vert extends HexNode {
   /* 
   TODO: returns three Edges which have this Vert as an endpoint
   /stubbed in verts
+  /done
   get edges () {
     return [
       new Edge(),
@@ -252,6 +254,7 @@ class Edge extends HexNode {
   /* 
   TODO: returns two cells which share this edge
   /stubbed
+  /done
   get cells () {
     return [
       new Cell(),
@@ -263,6 +266,7 @@ class Edge extends HexNode {
   /* 
   TODO: returns two vertices at endpoints of this edge
   /stubbed
+  /done
   get vertices () {
     return [
       new Vert(),
@@ -274,6 +278,7 @@ class Edge extends HexNode {
   /*  
   TODO: returns four edges which share an endpoint with this edge
   /stubbed
+  /done
   get edges () {
     return [
       new Edge(),
